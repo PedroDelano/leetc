@@ -5,6 +5,7 @@
  ***********************************/
 
 #include <stdio.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <assert.h>
 
@@ -44,27 +45,77 @@ void pop(Stack *s) {
   s->count--;
 }
 
-// Testing
+int head(Stack *s) {
+    if (s->count == 0) {
+      return NULL_VAL;
+    }
+    return s->data[s->count - 1];
+}
+
+
+bool is_empty(Stack *s) {
+  return head(s) == -1;
+}
+
+/***************************************************
+*
+* TESTING
+*
+****************************************************/
+
+void print_stack(Stack *s) {
+  printf("Stack: { ");
+  for (int i = 0; i < s->count; i++) {
+    printf("%d", s->data[i]);
+    if (i < s->count - 1) {
+      printf(" , ");
+    }
+  }
+  printf(" }\n");
+}
+
+int* finalPrices(int* prices, int pricesSize, int* returnSize) {
+
+    *returnSize = pricesSize;
+    int *newPrice = malloc(pricesSize * sizeof(int));
+    Stack *s1 = create_stack(pricesSize);
+
+    for (int i = pricesSize - 1; i >= 0; i--) {
+      newPrice[i] = prices[i];
+      while (!is_empty(s1) && head(s1) > prices[i]) {
+        pop(s1);
+      }
+      if (!is_empty(s1)) {
+        newPrice[i] = prices[i] - head(s1);
+      }
+      push(s1, prices[i]);
+    }
+
+    free(s1->data);
+    free(s1);
+    return newPrice;
+}
 
 int main(){
 
-  Stack *s1 = create_stack(5);
-  printf("Stack created with size %d\n", s1->size);
-  push(s1, 1);
-  push(s1, 4);
-  push(s1, 9);
-  for (int i = 0; i < s1->size; i++) {
-    printf("s1[%d] = %d\n", i, s1->data[i]);
+  int pricesSize = 4;
+  int *returnSize = malloc(sizeof(int));
+  int *prices = malloc(pricesSize * sizeof(int));
+
+  prices[0] = 10;
+  prices[1] = 1;
+  prices[2] = 1;
+  prices[3] = 6;
+
+  int *final = finalPrices(prices, pricesSize, returnSize);
+
+  for (int i = 0; i < *returnSize; i++) {
+    printf("R[%d] = %d\n", i, final[i]);
   }
 
-
-  printf("------\n");
-
-  pop(s1);
-  pop(s1);
-  for (int i = 0; i < s1->size; i++) {
-    printf("s1[%d] = %d\n", i, s1->data[i]);
-  }
+  free(prices);
+  free(returnSize);
+  free(final);
 
   return 0;
 }
