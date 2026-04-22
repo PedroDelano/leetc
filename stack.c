@@ -19,7 +19,7 @@ typedef struct Stack_s {
 
 Stack *create_stack(int size) {
   Stack *s = malloc(sizeof(Stack));
-  int *data = malloc(size * sizeof(int*));
+  int *data = malloc(size * sizeof(int));
   s->size = size;
   s->count = 0;
   s->data = data;
