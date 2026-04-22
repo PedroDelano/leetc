@@ -19,16 +19,14 @@ typedef struct Stack_s {
 
 Stack *create_stack(int size) {
   Stack *s = malloc(sizeof(Stack));
-  int *data = malloc(sizeof(size * sizeof(int)));
-
-  // initialize data with -1
-  for (int i = 0; i < size; i++) {
-    data[i] = NULL_VAL;
-  }
-
+  int *data = malloc(size * sizeof(int*));
   s->size = size;
   s->count = 0;
   s->data = data;
+  // initialize data with -1
+  for (int i = 0; i < size; i++) {
+    s->data[i] = NULL_VAL;
+  }
   return s;
 }
 
